@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from books.views import say_hello
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('say_hello/', say_hello ),
 ]
