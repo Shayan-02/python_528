@@ -1,0 +1,367 @@
+:root {
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --primary: #3157d5;
+    --primary-dark: #2542a8;
+    --border: #e5e7eb;
+    --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    --radius-lg: 20px;
+    --radius-md: 12px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Tahoma, Arial, sans-serif;
+    line-height: 1.8;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.container {
+    width: min(1100px, calc(100% - 32px));
+    margin-inline: auto;
+}
+
+.site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-inner {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-mark {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.brand strong,
+.brand small {
+    display: block;
+}
+
+.brand small {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.main-nav {
+    display: flex;
+    gap: 8px;
+}
+
+.main-nav a {
+    padding: 8px 12px;
+    color: var(--muted);
+    border-radius: 8px;
+}
+
+.main-nav a:hover {
+    background: var(--surface-soft);
+    color: var(--text);
+}
+
+.main-content {
+    padding-block: 52px 72px;
+}
+
+.page-intro {
+    max-width: 760px;
+    margin-bottom: 32px;
+}
+
+.eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.page-intro h1 {
+    margin: 0 0 8px;
+    font-size: clamp(30px, 5vw, 46px);
+    line-height: 1.2;
+}
+
+.page-intro p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.post-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    box-shadow: var(--shadow);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.11);
+}
+
+.post-card-top,
+.post-card-bottom,
+.meta-row,
+.back-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: var(--primary-dark);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.date {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.post-card h2 {
+    margin: 16px 0 8px;
+    font-size: 21px;
+    line-height: 1.45;
+}
+
+.post-card h2 a:hover,
+.read-more:hover {
+    color: var(--primary);
+}
+
+.post-card p {
+    min-height: 86px;
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.post-card-bottom {
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.author {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.read-more {
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.pagination {
+    margin-top: 34px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.pagination-summary {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.pagination-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.page-link {
+    min-width: 36px;
+    height: 36px;
+    display: inline-grid;
+    place-items: center;
+    padding-inline: 10px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+}
+
+.page-link:hover:not(.disabled),
+.page-link.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.page-link.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.post-detail {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.post-detail-head {
+    padding: 32px;
+    background: var(--surface-soft);
+    border-bottom: 1px solid var(--border);
+}
+
+.post-detail-head h1 {
+    margin: 14px 0 12px;
+    font-size: clamp(30px, 5vw, 44px);
+    line-height: 1.35;
+}
+
+.meta-row {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.post-body {
+    padding: 32px;
+    font-size: 17px;
+}
+
+.post-body p {
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.back-row {
+    justify-content: flex-start;
+    padding: 0 32px 32px;
+}
+
+.button {
+    display: inline-block;
+    border-radius: 10px;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.button-light {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+}
+
+.button-light:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    padding: 48px 24px;
+    text-align: center;
+    background: var(--surface);
+    border: 1px dashed #cbd5e1;
+    border-radius: var(--radius-lg);
+}
+
+.empty-state h2 {
+    margin-top: 0;
+}
+
+.empty-state p {
+    margin-bottom: 0;
+    color: var(--muted);
+}
+
+.site-footer {
+    padding-block: 24px;
+    background: #111827;
+    color: #d1d5db;
+    font-size: 12px;
+}
+
+.site-footer p {
+    margin: 0;
+}
+
+@media (max-width: 760px) {
+    .header-inner {
+        flex-direction: column;
+        justify-content: center;
+        padding-block: 12px;
+    }
+
+    .post-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .post-detail-head,
+    .post-body {
+        padding: 24px;
+    }
+
+    .back-row {
+        padding: 0 24px 24px;
+    }
+}

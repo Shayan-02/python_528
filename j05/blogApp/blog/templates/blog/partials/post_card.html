@@ -1,0 +1,17 @@
+<article class="post-card">
+    <div class="post-card-top">
+        <span class="badge">Django</span>
+        <span class="date">{{ post.created_at|date:'Y/m/d' }}</span>
+    </div>
+
+    <h2>
+        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+    </h2>
+
+    <p>{{ post.body|truncatewords:10 }}</p>
+
+    <div class="post-card-bottom">
+        <span class="author">{{ post.author.username }}</span>
+        <a class="read-more" href="{{ post.get_absolute_url }}">مطالعه پست ←</a>
+    </div>
+</article>

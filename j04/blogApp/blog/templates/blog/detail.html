@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{{ post.title }}</title>
+        <style>
+            body {
+                font-family: Tahoma, Arial, sans-serif;
+                max-width: 800px;
+                margin: 50px auto;
+                padding: 0 18px;
+                line-height: 2;
+                color: #202938;
+            }
+            article {
+                background: #fff;
+                border: 1px solid #e3e8f0;
+                border-radius: 12px;
+                padding: 24px;
+            }
+            .meta {
+                color: #667085;
+            }
+        </style>
+    </head>
+    <body>
+        <p><a href="{% url 'blog:home' %}">← بازگشت به فهرست</a></p>
+        <article>
+            <h1>{{ post.title }}</h1>
+            <p class="meta">
+                نویسنده: {{
+                post.author.get_full_name|default:post.author.username }} · {{
+                post.created_at|date:"Y/m/d H:i" }}
+            </p>
+            <p>{{ post.content|linebreaks }}</p>
+        </article>
+    </body>
+</html>

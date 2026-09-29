@@ -1,0 +1,22 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}فهرست پست‌ها | Django Blog{% endblock %}
+
+{% block content %}
+<section class="page-intro">
+    <h1>آخرین نوشته‌ها</h1>
+    </section>
+
+<section class="post-grid">
+    {% for post in page_obj %}
+        {% include 'blog/partials/post_card.html' with post=post %}
+    {% empty %}
+        <div class="empty-state">
+            <h2>هنوز پستی نداریم</h2>
+            <p>برای دیدن Pagination چند پست آزمایشی بسازید.</p>
+        </div>
+    {% endfor %}
+</section>
+
+{% include 'blog/partials/pagination.html' with page_obj=page_obj %}
+{% endblock %}

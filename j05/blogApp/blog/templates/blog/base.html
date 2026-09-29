@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}بلاگ ساده Django{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="{% url 'blog:post_list' %}">
+                <span class="brand-mark">D</span>
+                <span>
+                    <strong>Django Blog</strong>
+                    <small>پروژه آموزشی MVT</small>
+                </span>
+            </a>
+            <nav class="main-nav" aria-label="ناوبری اصلی">
+                <a href="{% url 'blog:post_list' %}">همه پست‌ها</a>
+                <a href="/admin/">مدیریت</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

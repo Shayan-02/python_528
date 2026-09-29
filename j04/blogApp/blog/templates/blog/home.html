@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>وبلاگ آموزشی Django</title>
+        <style>
+            body {
+                font-family: Tahoma, Arial, sans-serif;
+                max-width: 850px;
+                margin: 40px auto;
+                padding: 0 18px;
+                background: #f5f7fb;
+                color: #202938;
+            }
+            header,
+            .card {
+                background: #fff;
+                border: 1px solid #e3e8f0;
+                border-radius: 12px;
+                padding: 20px;
+                margin-bottom: 16px;
+            }
+            a {
+                color: #155eef;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .meta {
+                color: #667085;
+                font-size: 0.9rem;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>وبلاگ آموزشی Django</h1>
+            <p>فهرست نوشته‌هایی که از مدل Post خوانده شده‌اند.</p>
+            <a href="/admin/">ورود به پنل مدیریت</a>
+        </header>
+        {% for post in posts %}
+        <article class="card">
+            <h2>
+                <a href="{% url 'blog:detail' post.pk %}">{{ post.title }}</a>
+            </h2>
+            <p class="meta">
+                نویسنده: {{
+                post.author.get_full_name|default:post.author.username }}·{{
+                post.created_at|date:"Y/m/d H:i"}}
+            </p>
+            <p>{{ post.content|truncatewords:24 }}</p>
+            <a href="{% url 'blog:detail' post.pk %}">ادامهٔ مطلب ←</a>
+        </article>
+        {% empty %}
+        <p>
+            هنوز نوشته‌ای ثبت نشده است
+        </p>
+        {% endfor %}
+    </body>
+</html>
