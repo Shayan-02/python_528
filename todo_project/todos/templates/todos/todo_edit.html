@@ -1,0 +1,22 @@
+{% extends "todos/base.html" %}
+{% block title %}Edit todo{% endblock %}
+{% block content %}
+<h1>Edit todo</h1>
+<form method="post" class="card">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <label for="{{ form.title.id_for_label }}">Title</label>
+  {{ form.title.errors }}
+  {{ form.title }}
+  <label for="{{ form.description.id_for_label }}">Notes</label>
+  {{ form.description.errors }}
+  {{ form.description }}
+  <label for="{{ form.due_date.id_for_label }}">Due date</label>
+  {{ form.due_date.errors }}
+  {{ form.due_date }}
+  <div class="row" style="margin-top:16px">
+    <button class="btn" type="submit">Save</button>
+    <a class="btn ghost" href="{% url 'todo_list' %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

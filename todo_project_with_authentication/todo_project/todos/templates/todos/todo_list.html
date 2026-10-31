@@ -1,0 +1,64 @@
+{% extends "todos/base.html" %}
+{% load tz %}
+{% block content %}
+<h1>Todos</h1>
+<p class="sub">{{ remaining }} remaining</p>
+
+<form method="post" class="card">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  {{ form.title.errors }}
+  {{ form.title }}
+  <label for="{{ form.description.id_for_label }}">Notes</label>
+  {{ form.description.errors }}
+  {{ form.description }}
+  <label for="{{ form.due_date.id_for_label }}">Due date</label>
+  {{ form.due_date.errors }}
+  <div class="row">
+    <div style="flex:1">{{ form.due_date }}</div>
+    <button class="btn" type="submit">Add</button>
+  </div>
+</form>
+
+<div class="tabs">
+  <a href="?filter=all" class="{% if filter == 'all' %}on{% endif %}">All</a>
+  <a href="?filter=active" class="{% if filter == 'active' %}on{% endif %}">Active</a>
+  <a href="?filter=done" class="{% if filter == 'done' %}on{% endif %}">Done</a>
+</div>
+
+<div class="card">
+  {% if todos %}
+  <ul>
+    {% for todo in todos %}
+    <li class="todo {% if todo.completed %}done{% endif %}">
+      <form method="post" action="{% url 'todo_toggle' todo.pk %}">
+        {% csrf_token %}
+        <button class="check" type="submit" aria-label="Toggle {{ todo.title }}">{% if todo.completed %}✓{% endif %}</button>
+      </form>
+      <div class="body">
+        <div class="title">{{ todo.title }}</div>
+        {% if todo.description %}<div class="meta">{{ todo.description|linebreaksbr }}</div>{% endif %}
+        {% if todo.due_date %}<div class="meta">Due {{ todo.due_date|date:"M j, Y" }}</div>{% endif %}
+      </div>
+      <div class="actions">
+        <a class="btn ghost small" href="{% url 'todo_edit' todo.pk %}">Edit</a>
+        <form method="post" action="{% url 'todo_delete' todo.pk %}" onsubmit="return confirm('Delete this todo?');">
+          {% csrf_token %}
+          <button class="btn danger small" type="submit">Delete</button>
+        </form>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="empty">Nothing here yet.</div>
+  {% endif %}
+</div>
+
+{% if filter != "active" %}
+<form method="post" action="{% url 'todo_clear_completed' %}">
+  {% csrf_token %}
+  <button class="btn ghost small" type="submit">Clear completed</button>
+</form>
+{% endif %}
+{% endblock %}
