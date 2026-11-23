@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load price_filters %}
+{% block title %}سبد خرید | آینده شاپ{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-4">سبد خرید شما</h1>
+{% if cart|length %}
+<div class="table-responsive bg-white rounded-4 p-3 shadow-sm">
+<table class="table align-middle">
+<thead><tr><th>محصول</th><th>تعداد</th><th>قیمت واحد</th><th>جمع</th><th></th></tr></thead>
+<tbody>
+{% for item in cart %}
+<tr>
+<td>{{ item.product.name }}</td><td>{{ item.quantity }}</td>
+<td>
+  {% if item.discount_amount %}<div class="old-price">{{ item.original_unit_price|price_format }} تومان</div>{% endif %}
+  <strong>{{ item.unit_price|price_format }} تومان</strong>
+  {% if item.discount_amount %}<small class="saving-text">{{ item.discount_percent }}٪ تخفیف؛ {{ item.discount_amount|price_format }} تومان کاهش در هر واحد</small>{% endif %}
+</td>
+<td>{{ item.total_price|price_format }} تومان</td>
+<td><form method="post" action="{% url 'cart:remove' item.product.id %}">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">حذف</button></form></td>
+</tr>
+{% endfor %}
+</tbody></table>
+<div class="text-end"><h4>مبلغ کل: {{ cart.get_total_price|price_format }} تومان</h4><a class="btn btn-primary btn-lg" href="{% url 'orders:create' %}">ادامه و ثبت سفارش</a></div>
+</div>
+{% else %}<div class="empty-state"><i class="bi bi-cart-x display-4"></i><h4 class="mt-3">سبد خرید خالی است</h4><a class="btn btn-primary mt-2" href="{% url 'products:list' %}">مشاهده محصولات</a></div>{% endif %}
+{% endblock %}

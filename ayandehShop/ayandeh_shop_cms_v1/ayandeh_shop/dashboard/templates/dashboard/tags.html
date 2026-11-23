@@ -1,0 +1,9 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block title %}برچسب‌های بلاگ | آینده‌شاپ{% endblock %}
+{% block page_heading %}برچسب‌های بلاگ{% endblock %}
+{% block breadcrumb %}بلاگ / برچسب‌ها{% endblock %}
+{% block content %}
+<div class="cms-page-titlebar"><div><h1>برچسب‌های بلاگ</h1><p>برچسب‌ها را برای دسته‌بندی دقیق‌تر و ارتباط موضوعی مقالات مدیریت کنید.</p></div><a href="{% url 'dashboard:tag_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> برچسب جدید</a></div>
+<section class="cms-panel"><form method="get" class="cms-filterbar"><div class="cms-search"><i class="bi bi-search"></i><input name="q" value="{{ query }}" placeholder="جستجوی برچسب"></div><button class="btn btn-outline-primary">جستجو</button><a href="{% url 'dashboard:tags' %}" class="btn btn-light">پاک کردن</a></form><div class="table-responsive"><table class="table cms-table align-middle"><thead><tr><th>نام برچسب</th><th>نامک</th><th>تعداد مقاله مرتبط</th><th class="text-end">عملیات</th></tr></thead><tbody>{% for tag in page_obj %}<tr><td><b>{{ tag.name }}</b></td><td><code>{{ tag.slug }}</code></td><td>{{ tag.posts_count|intcomma }}</td><td><div class="cms-actions"><a href="{% url 'dashboard:tag_update' tag.pk %}" class="cms-row-action" title="ویرایش"><i class="bi bi-pencil-square"></i></a><a href="{% url 'dashboard:tag_delete' tag.pk %}" class="cms-row-action danger" title="حذف"><i class="bi bi-trash3"></i></a></div></td></tr>{% empty %}<tr><td colspan="4"><div class="cms-empty">برچسبی ثبت نشده است.</div></td></tr>{% endfor %}</tbody></table></div>{% include 'dashboard/partials/pagination.html' %}</section>
+{% endblock %}

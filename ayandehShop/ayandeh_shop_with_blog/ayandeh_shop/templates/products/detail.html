@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load price_filters %}
+{% block title %}{{ product.name }} | آینده شاپ{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-md-5">
+    <div class="detail-image position-relative">
+      {% if product.has_discount %}<span class="discount-badge detail-discount">{{ product.discount_percent }}٪ تخفیف</span>{% endif %}
+      {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
+      {% else %}<div class="image-placeholder display-1"><i class="bi bi-image"></i></div>{% endif %}
+    </div>
+  </div>
+  <div class="col-md-7">
+    <small class="text-primary">{{ product.category.name }}</small>
+    <h1 class="h2 fw-bold my-3">{{ product.name }}</h1>
+    <p class="text-secondary">{{ product.short_description }}</p>
+    <div class="price-block my-4">
+      {% if product.has_discount %}
+        <div class="old-price fs-5">{{ product.price|price_format }} <small>تومان</small></div>
+      {% endif %}
+      <div class="price fs-3">{{ product.final_price|price_format }} <small>تومان</small></div>
+      {% if product.has_discount %}
+        <div class="saving-text mt-1">شما {{ product.discount_amount|price_format }} تومان ({{ product.discount_percent }}٪) تخفیف می‌گیرید.</div>
+      {% endif %}
+    </div>
+    <p>وضعیت موجودی: {% if product.stock %}<span class="text-success">موجود در انبار ({{ product.stock }})</span>{% else %}<span class="text-danger">ناموجود</span>{% endif %}</p>
+    {% if product.stock %}
+      <form method="post" action="{% url 'cart:add' product.id %}" class="d-flex gap-2 align-items-center">
+        {% csrf_token %}<input class="form-control quantity-input" type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
+        <button class="btn btn-primary btn-lg"><i class="bi bi-cart-plus"></i> افزودن به سبد خرید</button>
+      </form>
+    {% endif %}
+    <hr><h5>توضیحات محصول</h5><p class="lh-lg">{{ product.description|linebreaks }}</p>
+  </div>
+</div>
+{% if related %}
+<section class="mt-5"><div class="section-heading"><h2>محصولات مرتبط</h2></div><div class="row g-3">{% for product in related %}{% include "products/_card.html" %}{% endfor %}</div></section>
+{% endif %}
+{% endblock %}

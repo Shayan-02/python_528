@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}سفارش شماره {{ order.id }} | آینده شاپ{% endblock %}
+{% block content %}
+<div class="form-panel">
+  <div class="d-flex justify-content-between flex-wrap"><h1 class="h4">سفارش شماره {{ order.id }}</h1><span class="badge bg-primary">{{ order.get_status_display }}</span></div>
+  <p class="text-secondary">تاریخ ثبت: {{ order.created_at|date:"Y/m/d H:i" }}</p>
+  <hr><h5>اقلام سفارش</h5>
+  {% for item in order.items.all %}<div class="d-flex justify-content-between border-bottom py-2"><span>{{ item.product_name }} × {{ item.quantity }}</span><strong>{{ item.get_cost|floatformat:0 }} تومان</strong></div>{% endfor %}
+  <h4 class="text-end mt-4">مبلغ کل: {{ order.total_price|floatformat:0 }} تومان</h4>
+  <p class="mt-3 mb-0">نشانی ارسال: {{ order.address }}</p>
+</div>
+{% endblock %}

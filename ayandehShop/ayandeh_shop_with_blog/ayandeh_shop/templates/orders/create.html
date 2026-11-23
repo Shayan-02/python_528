@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load price_filters %}
+{% block title %}ثبت سفارش | آینده شاپ{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-4">اطلاعات ارسال سفارش</h1>
+<div class="row g-4">
+  <div class="col-lg-7"><div class="form-panel">
+    <form method="post">{% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3"><label class="form-label">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}</div>
+      {% endfor %}
+      <button class="btn btn-primary btn-lg">ثبت نهایی سفارش</button>
+    </form>
+  </div></div>
+  <div class="col-lg-5"><div class="form-panel"><h5>خلاصه خرید</h5>
+    {% for item in cart %}<div class="d-flex justify-content-between border-bottom py-2"><span>{{ item.product.name }} × {{ item.quantity }}</span><strong>{{ item.total_price|price_format }} تومان</strong></div>{% endfor %}
+    <div class="d-flex justify-content-between mt-3"><strong>مبلغ قابل پرداخت</strong><strong>{{ cart_total|default_if_none:0|price_format }} تومان</strong></div>
+  </div></div>
+</div>
+{% endblock %}

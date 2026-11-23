@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}{% if active_category %}{{ active_category.name }}{% elif active_tag %}برچسب {{ active_tag.name }}{% else %}مجله آینده شاپ{% endif %} | آینده شاپ{% endblock %}
+{% block meta_description %}مقالات، راهنماهای خرید و تازه‌های دنیای فناوری در مجله آینده شاپ.{% endblock %}
+{% block content %}
+<nav aria-label="مسیر صفحه" class="small text-secondary mb-3">
+  <a href="{% url 'core:home' %}" class="text-decoration-none text-secondary">صفحه اصلی</a>
+  <i class="bi bi-chevron-left mx-1"></i>
+  <a href="{% url 'blog:list' %}" class="text-decoration-none text-secondary">بلاگ</a>
+  {% if active_category %}<i class="bi bi-chevron-left mx-1"></i>{{ active_category.name }}{% endif %}
+  {% if active_tag %}<i class="bi bi-chevron-left mx-1"></i>{{ active_tag.name }}{% endif %}
+</nav>
+
+<div class="blog-page-heading mb-4">
+  <div>
+    <span class="eyebrow">مجله آینده شاپ</span>
+    <h1 class="h2 fw-bold mb-2">
+      {% if active_category %}{{ active_category.name }}
+      {% elif active_tag %}مقالات با برچسب «{{ active_tag.name }}»
+      {% else %}دانش بیشتر، خرید هوشمندانه‌تر{% endif %}
+    </h1>
+    <p class="text-secondary mb-0">راهنمای خرید، معرفی محصولات و تازه‌های دنیای دیجیتال</p>
+  </div>
+  <form method="get" action="" class="blog-search d-flex" role="search">
+    <input class="form-control" type="search" name="q" value="{{ query }}" placeholder="جستجو در مقالات..." aria-label="جستجو در مقالات">
+    <button class="btn btn-primary" type="submit" aria-label="جستجو"><i class="bi bi-search"></i></button>
+  </form>
+</div>
+
+<div class="row g-4">
+  <section class="col-lg-9" aria-label="فهرست مقالات">
+    {% if featured_post %}
+      <article class="blog-featured-post mb-4">
+        <a class="blog-featured-image" href="{{ featured_post.get_absolute_url }}">
+          {% if featured_post.featured_image %}<img src="{{ featured_post.featured_image.url }}" alt="{{ featured_post.title }}">{% else %}<span><i class="bi bi-journal-richtext"></i></span>{% endif %}
+        </a>
+        <div class="blog-featured-copy">
+          <span class="badge text-bg-primary mb-2">مقاله منتخب</span>
+          <h2 class="h4 fw-bold"><a href="{{ featured_post.get_absolute_url }}">{{ featured_post.title }}</a></h2>
+          {% if featured_post.excerpt %}<p class="text-secondary">{{ featured_post.excerpt }}</p>{% endif %}
+          <a href="{{ featured_post.get_absolute_url }}" class="btn btn-primary btn-sm">مطالعه مقاله</a>
+        </div>
+      </article>
+    {% endif %}
+    <div class="row g-3">
+      {% for post in page_obj %}
+        {% include "blog/_post_card.html" with post=post %}
+      {% empty %}
+        <div class="col-12"><div class="empty-state"><i class="bi bi-journal-x fs-2 d-block mb-2"></i>مقاله‌ای برای نمایش پیدا نشد.</div></div>
+      {% endfor %}
+    </div>
+    {% if page_obj.has_other_pages %}
+      <nav class="mt-4" aria-label="صفحه‌بندی مقالات">
+        <ul class="pagination justify-content-center flex-wrap">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?{% if query %}q={{ query|urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}">قبلی</a></li>
+          {% endif %}
+          <li class="page-item active"><span class="page-link">{{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span></li>
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?{% if query %}q={{ query|urlencode }}&{% endif %}page={{ page_obj.next_page_number }}">بعدی</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  </section>
+
+  <aside class="col-lg-3">
+    <div class="blog-sidebar-box mb-3">
+      <h2 class="h6 fw-bold mb-3">دسته‌بندی مقالات</h2>
+      {% for category in categories %}
+        <a class="blog-sidebar-link{% if active_category.pk == category.pk %} active{% endif %}" href="{{ category.get_absolute_url }}">{{ category.name }}<i class="bi bi-chevron-left"></i></a>
+      {% empty %}<p class="small text-secondary mb-0">هنوز دسته‌بندی‌ای ثبت نشده است.</p>{% endfor %}
+    </div>
+    <div class="blog-sidebar-box">
+      <h2 class="h6 fw-bold mb-3">برچسب‌ها</h2>
+      <div class="blog-tags">
+        {% for tag in tags %}<a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>
+        {% empty %}<span class="small text-secondary">برچسبی ثبت نشده است.</span>{% endfor %}
+      </div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

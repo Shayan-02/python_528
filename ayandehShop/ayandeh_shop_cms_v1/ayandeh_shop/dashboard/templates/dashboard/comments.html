@@ -1,0 +1,10 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}مدیریت دیدگاه‌ها | آینده‌شاپ{% endblock %}
+{% block page_heading %}مدیریت دیدگاه‌ها{% endblock %}
+{% block breadcrumb %}بلاگ / دیدگاه‌ها{% endblock %}
+{% block content %}
+<div class="cms-page-titlebar"><div><h1>دیدگاه‌های کاربران</h1><p>دیدگاه‌ها پیش از تأیید مدیر در سایت نمایش داده نمی‌شوند.</p></div></div>
+<section class="cms-panel"><form method="get" class="cms-filterbar"><select name="state" class="form-select"><option value="pending" {% if state == 'pending' %}selected{% endif %}>در انتظار تأیید</option><option value="approved" {% if state == 'approved' %}selected{% endif %}>تأییدشده</option><option value="all" {% if state == 'all' %}selected{% endif %}>همه دیدگاه‌ها</option></select><button class="btn btn-outline-primary">نمایش</button></form>
+{% for comment in page_obj %}<article class="cms-comment"><div class="cms-comment-head"><div><b>{{ comment.name }}</b><small>{{ comment.email }} · {{ comment.created_at|date:'Y/m/d H:i' }}</small></div><a href="{{ comment.post.get_absolute_url }}" target="_blank" class="cms-text-link">{{ comment.post.title }} <i class="bi bi-box-arrow-up-left"></i></a></div><p>{{ comment.body|linebreaksbr }}</p><div class="cms-actions"><form method="post" action="{% url 'dashboard:comment_toggle' comment.pk %}">{% csrf_token %}<button class="btn btn-sm {% if comment.is_approved %}btn-outline-warning{% else %}btn-outline-success{% endif %}">{% if comment.is_approved %}لغو تأیید{% else %}تأیید دیدگاه{% endif %}</button></form><form method="post" action="{% url 'dashboard:comment_delete' comment.pk %}" data-confirm="این دیدگاه حذف شود؟">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">حذف</button></form></div></article>{% empty %}<div class="cms-empty">دیدگاهی در این فهرست وجود ندارد.</div>{% endfor %}
+{% include 'dashboard/partials/pagination.html' %}</section>
+{% endblock %}

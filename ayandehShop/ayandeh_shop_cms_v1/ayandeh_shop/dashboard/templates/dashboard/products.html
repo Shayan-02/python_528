@@ -1,0 +1,26 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block title %}مدیریت محصولات | آینده‌شاپ{% endblock %}
+{% block page_heading %}مدیریت محصولات{% endblock %}
+{% block breadcrumb %}محصولات{% endblock %}
+{% block content %}
+<div class="cms-page-titlebar"><div><h1>محصولات</h1><p>افزودن، ویرایش و کنترل وضعیت نمایش محصولات فروشگاه.</p></div><a href="{% url 'dashboard:product_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> افزودن محصول</a></div>
+<section class="cms-panel">
+  <form method="get" class="cms-filterbar"><div class="cms-search"><i class="bi bi-search"></i><input name="q" value="{{ query }}" placeholder="جستجوی نام، کد کالا یا نامک"></div>
+    <select class="form-select" name="category"><option value="">همه دسته‌بندی‌ها</option>{% for category in categories %}<option value="{{ category.pk }}" {% if selected_category == category.pk|stringformat:'s' %}selected{% endif %}>{{ category.name }}</option>{% endfor %}</select>
+    <select class="form-select" name="status"><option value="">همه وضعیت‌ها</option><option value="active" {% if status == 'active' %}selected{% endif %}>قابل نمایش</option><option value="inactive" {% if status == 'inactive' %}selected{% endif %}>غیرفعال / پنهان</option></select>
+    <button class="btn btn-outline-primary" type="submit">اعمال فیلتر</button><a class="btn btn-light" href="{% url 'dashboard:products' %}">پاک کردن</a>
+  </form>
+  <div class="table-responsive"><table class="table cms-table align-middle"><thead><tr><th>محصول</th><th>دسته‌بندی</th><th>قیمت نهایی</th><th>موجودی</th><th>نمایش</th><th class="text-end">عملیات</th></tr></thead><tbody>
+  {% for product in page_obj %}<tr>
+    <td><div class="cms-product-cell">{% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">{% else %}<span class="cms-product-placeholder"><i class="bi bi-image"></i></span>{% endif %}<div><b>{{ product.name }}</b><small>{% if product.sku %}کد: {{ product.sku }}{% else %}شناسه #{{ product.pk }}{% endif %}{% if product.is_featured %} · پیشنهاد ویژه{% endif %}</small></div></div></td>
+    <td>{{ product.category.name }}{% if not product.category.is_active %}<small class="d-block text-danger">دسته غیرفعال</small>{% endif %}</td>
+    <td><b>{{ product.final_price|intcomma }} تومان</b>{% if product.has_discount %}<small class="d-block text-secondary text-decoration-line-through">{{ product.price|intcomma }}</small>{% endif %}</td>
+    <td><span class="cms-stock-number {% if product.stock == 0 %}stock-zero{% elif product.stock <= 5 %}stock-low{% endif %}">{{ product.stock|intcomma }}</span></td>
+    <td>{% if product.is_active and product.category.is_active %}<span class="cms-status status-delivered">قابل نمایش</span>{% elif product.is_active %}<span class="cms-status status-pending">پنهان با دسته</span>{% else %}<span class="cms-status status-cancelled">غیرفعال</span>{% endif %}</td>
+    <td><div class="cms-actions"><a href="{% url 'dashboard:product_update' product.pk %}" class="cms-row-action" title="ویرایش"><i class="bi bi-pencil-square"></i></a><a href="{% url 'dashboard:product_delete' product.pk %}" class="cms-row-action danger" title="حذف"><i class="bi bi-trash3"></i></a></div></td>
+  </tr>{% empty %}<tr><td colspan="6"><div class="cms-empty">محصولی با این شرایط پیدا نشد.</div></td></tr>{% endfor %}
+  </tbody></table></div>
+  {% include 'dashboard/partials/pagination.html' %}
+</section>
+{% endblock %}

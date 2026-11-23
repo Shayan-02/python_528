@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}آینده شاپ | خرید کالای دیجیتال{% endblock %}
+{% block content %}
+<section class="hero p-4 p-lg-5 mb-4">
+  <div class="row align-items-center">
+    <div class="col-lg-7">
+      <span class="badge bg-warning text-dark mb-3">انتخاب هوشمندانه</span>
+      <h1 class="display-5 fw-bold text-white">دنیای دیجیتال،<br>یک قدم نزدیک‌تر</h1>
+      <p class="lead text-white-50">جدیدترین لپ‌تاپ‌ها، موبایل‌ها و لوازم جانبی را در آینده شاپ پیدا کنید.</p>
+      <a class="btn btn-light btn-lg mt-2" href="{% url 'products:list' %}">مشاهده محصولات <i class="bi bi-arrow-left"></i></a>
+    </div>
+    <div class="col-lg-5 text-center mt-4 mt-lg-0">
+      <div class="hero-icon"><i class="bi bi-laptop"></i><i class="bi bi-phone"></i><i class="bi bi-headphones"></i></div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-5">
+  <div class="section-heading"><h2>دسته‌بندی محصولات</h2><a href="{% url 'products:list' %}">همه محصولات</a></div>
+  <div class="row g-3">
+    {% for category in categories %}
+      <div class="col-6 col-md-3 col-lg-2">
+        <a class="category-tile" href="{% url 'products:category' category.slug %}">
+          <i class="bi bi-grid"></i><span>{{ category.name }}</span>
+        </a>
+      </div>
+    {% empty %}
+      <div class="col-12"><div class="empty-state">هنوز دسته‌بندی ثبت نشده است. از پنل مدیریت چند دسته‌بندی اضافه کنید.</div></div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="mb-5">
+  <div class="section-heading"><h2>محصولات منتخب</h2><a href="{% url 'products:list' %}">مشاهده همه</a></div>
+  <div class="row g-3">
+    {% for product in featured %}
+      {% include "products/_card.html" with product=product %}
+    {% empty %}
+      <div class="col-12"><div class="empty-state">هنوز محصولی ثبت نشده است. محصولات را از پنل مدیریت اضافه کنید.</div></div>
+    {% endfor %}
+  </div>
+</section>
+<section class="service-strip row g-3 text-center">
+  <div class="col-6 col-lg-3"><i class="bi bi-patch-check"></i><strong>ضمانت اصالت کالا</strong><small>خرید با اطمینان</small></div>
+  <div class="col-6 col-lg-3"><i class="bi bi-arrow-repeat"></i><strong>۷ روز ضمانت بازگشت</strong><small>مطابق شرایط فروشگاه</small></div>
+  <div class="col-6 col-lg-3"><i class="bi bi-truck"></i><strong>ارسال سریع</strong><small>به سراسر کشور</small></div>
+  <div class="col-6 col-lg-3"><i class="bi bi-headset"></i><strong>پشتیبانی</strong><small>پاسخ‌گوی مشتریان</small></div>
+</section>
+{% endblock %}

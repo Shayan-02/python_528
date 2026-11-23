@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}محصولات | آینده شاپ{% endblock %}
+{% block content %}
+<div class="section-heading"><div><h1>{% if active_category %}{{ active_category.name }}{% else %}همه محصولات{% endif %}</h1><p class="text-secondary mb-0">{{ page_obj.paginator.count }} محصول</p></div></div>
+<div class="row g-4">
+  <aside class="col-lg-3">
+    <div class="filter-box">
+      <h5>دسته‌بندی‌ها</h5>
+      <a class="filter-link" href="{% url 'products:list' %}">همه محصولات</a>
+      {% for category in categories %}<a class="filter-link" href="{% url 'products:category' category.slug %}">{{ category.name }}</a>{% endfor %}
+      <hr>
+      <form method="get">
+        <label class="form-label">مرتب‌سازی</label>
+        <select name="sort" class="form-select mb-2">
+          <option value="">پیش‌فرض</option><option value="newest" {% if sort == 'newest' %}selected{% endif %}>جدیدترین</option>
+          <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>ارزان‌ترین</option>
+          <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>گران‌ترین</option>
+        </select>
+        {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+        <button class="btn btn-primary w-100">اعمال</button>
+      </form>
+    </div>
+  </aside>
+  <div class="col-lg-9">
+    {% if query %}<p>نتایج جستجو برای «{{ query }}»</p>{% endif %}
+    <div class="row g-3">
+      {% for product in page_obj %}{% include "products/_card.html" with product=product %}{% empty %}
+        <div class="col-12"><div class="empty-state">محصولی برای نمایش پیدا نشد.</div></div>
+      {% endfor %}
+    </div>
+    {% if page_obj.paginator.num_pages > 1 %}
+      <nav class="mt-4"><ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&sort={{ sort }}">قبلی</a></li>{% endif %}
+        <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&sort={{ sort }}">بعدی</a></li>{% endif %}
+      </ul></nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

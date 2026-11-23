@@ -1,0 +1,19 @@
+<div class="col-6 col-md-4 col-xl-3">
+  <div class="product-card h-100">
+    <a href="{{ product.get_absolute_url }}" class="product-image">
+      {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
+      {% else %}<div class="image-placeholder"><i class="bi bi-image"></i></div>{% endif %}
+    </a>
+    <div class="p-3">
+      <small class="text-secondary">{{ product.category.name }}</small>
+      <h3 class="product-title"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+      <div class="price">{{ product.price|floatformat:0 }} <small>تومان</small></div>
+      {% if product.stock > 0 %}
+        <form method="post" action="{% url 'cart:add' product.id %}">{% csrf_token %}
+          <input type="hidden" name="quantity" value="1">
+          <button class="btn btn-outline-primary w-100 mt-3"><i class="bi bi-cart-plus"></i> افزودن به سبد</button>
+        </form>
+      {% else %}<button class="btn btn-light w-100 mt-3" disabled>ناموجود</button>{% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block title %}دسته‌بندی محصولات | آینده‌شاپ{% endblock %}
+{% block page_heading %}دسته‌بندی محصولات{% endblock %}
+{% block breadcrumb %}دسته‌بندی‌ها{% endblock %}
+{% block content %}
+<div class="cms-page-titlebar"><div><h1>دسته‌بندی محصولات</h1><p>با غیرفعال‌سازی دسته، محصولات آن حذف نمی‌شوند و فقط از فروشگاه عمومی پنهان خواهند شد.</p></div><a href="{% url 'dashboard:category_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> دسته‌بندی جدید</a></div>
+<section class="cms-panel"><form method="get" class="cms-filterbar"><div class="cms-search"><i class="bi bi-search"></i><input name="q" value="{{ query }}" placeholder="جستجوی دسته‌بندی"></div><button class="btn btn-outline-primary">جستجو</button><a class="btn btn-light" href="{% url 'dashboard:categories' %}">پاک کردن</a></form>
+<div class="table-responsive"><table class="table cms-table align-middle"><thead><tr><th>نام دسته‌بندی</th><th>نامک</th><th>تعداد محصول</th><th>وضعیت</th><th class="text-end">عملیات</th></tr></thead><tbody>
+{% for category in page_obj %}<tr><td><b>{{ category.name }}</b><small class="d-block text-secondary">{{ category.description|default:'بدون توضیحات'|truncatechars:70 }}</small></td><td><code>{{ category.slug }}</code></td><td>{{ category.product_count|intcomma }} محصول</td><td>{% if category.is_active %}<span class="cms-status status-delivered">فعال</span>{% else %}<span class="cms-status status-cancelled">غیرفعال</span>{% endif %}</td><td><div class="cms-actions">
+<a href="{% url 'dashboard:category_update' category.pk %}" class="cms-row-action" title="ویرایش"><i class="bi bi-pencil-square"></i></a>
+<form method="post" action="{% url 'dashboard:category_toggle' category.pk %}">{% csrf_token %}<button class="cms-row-action {% if category.is_active %}warning{% else %}success{% endif %}" title="{% if category.is_active %}غیرفعال کردن{% else %}فعال کردن{% endif %}"><i class="bi {% if category.is_active %}bi-pause-circle{% else %}bi-play-circle{% endif %}"></i></button></form>
+<a href="{% url 'dashboard:category_delete' category.pk %}" class="cms-row-action danger" title="حذف"><i class="bi bi-trash3"></i></a></div></td></tr>
+{% empty %}<tr><td colspan="5"><div class="cms-empty">هنوز دسته‌بندی‌ای ایجاد نشده است.</div></td></tr>{% endfor %}
+</tbody></table></div>{% include 'dashboard/partials/pagination.html' %}</section>
+{% endblock %}

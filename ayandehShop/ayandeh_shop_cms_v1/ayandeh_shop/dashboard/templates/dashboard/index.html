@@ -1,0 +1,35 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block title %}داشبورد مدیریت | آینده‌شاپ{% endblock %}
+{% block page_heading %}داشبورد مدیریت{% endblock %}
+{% block breadcrumb %}نمای کلی{% endblock %}
+{% block content %}
+<div class="cms-page-intro"><div><h1>سلام، {{ request.user.get_full_name|default:request.user.username }} 👋</h1><p>نمای کلی وضعیت فروشگاه و محتوای سایت در یک نگاه.</p></div><span class="cms-date-pill"><i class="bi bi-calendar3"></i> {% now 'Y/m/d' %}</span></div>
+<div class="row g-3 cms-stat-grid">
+  <div class="col-6 col-xl-3"><div class="cms-stat-card"><div class="cms-stat-icon blue"><i class="bi bi-box-seam"></i></div><div class="cms-stat-label">کل محصولات</div><div class="cms-stat-value">{{ products_count|intcomma }}</div><div class="cms-stat-foot">{{ active_products_count|intcomma }} محصول قابل نمایش</div></div></div>
+  <div class="col-6 col-xl-3"><div class="cms-stat-card"><div class="cms-stat-icon violet"><i class="bi bi-receipt"></i></div><div class="cms-stat-label">کل سفارش‌ها</div><div class="cms-stat-value">{{ orders_count|intcomma }}</div><div class="cms-stat-foot">{{ pending_orders_count|intcomma }} سفارش در انتظار بررسی</div></div></div>
+  <div class="col-6 col-xl-3"><div class="cms-stat-card"><div class="cms-stat-icon green"><i class="bi bi-cash-stack"></i></div><div class="cms-stat-label">مجموع مبلغ سفارش‌ها</div><div class="cms-stat-value cms-stat-money">{{ revenue|intcomma }}</div><div class="cms-stat-foot">تومان · بدون سفارش‌های لغوشده</div></div></div>
+  <div class="col-6 col-xl-3"><div class="cms-stat-card"><div class="cms-stat-icon orange"><i class="bi bi-people"></i></div><div class="cms-stat-label">کاربران فعال</div><div class="cms-stat-value">{{ users_count|intcomma }}</div><div class="cms-stat-foot">{{ today_orders_count|intcomma }} سفارش امروز</div></div></div>
+</div>
+<div class="row g-3 mt-1">
+  <div class="col-xl-8"><section class="cms-panel h-100"><div class="cms-panel-header"><div><h2>آخرین سفارش‌ها</h2><p>آخرین سفارش‌های ثبت‌شده در فروشگاه</p></div><a href="{% url 'dashboard:orders' %}" class="cms-text-link">همه سفارش‌ها <i class="bi bi-arrow-left"></i></a></div>
+    <div class="table-responsive"><table class="table cms-table align-middle"><thead><tr><th>شماره</th><th>مشتری</th><th>تاریخ</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody>
+    {% for order in recent_orders %}<tr><td class="fw-bold">#{{ order.pk }}</td><td>{{ order.full_name }}</td><td>{{ order.created_at|date:'Y/m/d H:i' }}</td><td>{{ order.total_price|intcomma }} تومان</td><td><span class="cms-status status-{{ order.status }}">{{ order.get_status_display }}</span></td><td><a class="cms-row-action" href="{% url 'dashboard:order_detail' order.pk %}" aria-label="مشاهده سفارش"><i class="bi bi-chevron-left"></i></a></td></tr>
+    {% empty %}<tr><td colspan="6"><div class="cms-empty">هنوز سفارشی ثبت نشده است.</div></td></tr>{% endfor %}
+    </tbody></table></div>
+  </section></div>
+  <div class="col-xl-4"><section class="cms-panel h-100"><div class="cms-panel-header"><div><h2>نمای کلی محتوا</h2><p>وضعیت بخش‌های محتوایی</p></div></div>
+    <div class="cms-quick-stat"><span class="cms-quick-icon purple"><i class="bi bi-journal-richtext"></i></span><span class="cms-quick-copy"><b>{{ posts_count|intcomma }} مقاله</b><small>{{ draft_posts_count|intcomma }} پیش‌نویس</small></span><a href="{% url 'dashboard:posts' %}"><i class="bi bi-arrow-left"></i></a></div>
+    <div class="cms-quick-stat"><span class="cms-quick-icon amber"><i class="bi bi-chat-square-text"></i></span><span class="cms-quick-copy"><b>دیدگاه‌ها</b><small>{{ comments_pending_count|intcomma }} دیدگاه در انتظار تأیید</small></span><a href="{% url 'dashboard:comments' %}"><i class="bi bi-arrow-left"></i></a></div>
+    <div class="cms-quick-stat"><span class="cms-quick-icon teal"><i class="bi bi-tags"></i></span><span class="cms-quick-copy"><b>{{ categories_count|intcomma }} دسته‌بندی محصول</b><small>{{ active_categories_count|intcomma }} دسته‌بندی فعال</small></span><a href="{% url 'dashboard:categories' %}"><i class="bi bi-arrow-left"></i></a></div>
+  </section></div>
+</div>
+<div class="row g-3 mt-1">
+  <div class="col-xl-6"><section class="cms-panel"><div class="cms-panel-header"><div><h2>هشدار موجودی محصولات</h2><p>محصولات فعال با موجودی پنج عدد یا کمتر</p></div><a href="{% url 'dashboard:products' %}" class="cms-text-link">مدیریت محصولات</a></div>
+    {% for product in low_stock_products %}<div class="cms-low-stock"><div><b>{{ product.name }}</b><small>{{ product.category.name }}</small></div><span class="cms-stock-number {% if product.stock == 0 %}stock-zero{% endif %}">{{ product.stock|intcomma }} عدد</span></div>{% empty %}<div class="cms-empty">در حال حاضر محصولی با موجودی کم وجود ندارد.</div>{% endfor %}
+  </section></div>
+  <div class="col-xl-6"><section class="cms-panel"><div class="cms-panel-header"><div><h2>آخرین مقالات</h2><p>مقالات به‌روزرسانی‌شده</p></div><a href="{% url 'dashboard:posts' %}" class="cms-text-link">مدیریت بلاگ</a></div>
+    {% for post in recent_posts %}<div class="cms-recent-post"><div><b>{{ post.title }}</b><small>{{ post.updated_at|date:'Y/m/d H:i' }}</small></div><span class="cms-status {% if post.status == 'published' %}status-delivered{% else %}status-pending{% endif %}">{{ post.get_status_display }}</span></div>{% empty %}<div class="cms-empty">هنوز مقاله‌ای ثبت نشده است.</div>{% endfor %}
+  </section></div>
+</div>
+{% endblock %}

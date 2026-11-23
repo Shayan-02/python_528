@@ -1,0 +1,72 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}پنل مدیریت | آینده‌شاپ{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{% static 'dashboard/css/dashboard.css' %}" rel="stylesheet">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="cms-body" data-theme="light">
+<div class="cms-app">
+  <aside class="cms-sidebar" id="cmsSidebar">
+    <a class="cms-brand" href="{% url 'dashboard:index' %}">
+      <span class="cms-brand-mark"><i class="bi bi-bag-check-fill"></i></span>
+      <span><strong>آینده‌شاپ</strong><small>مدیریت فروشگاه</small></span>
+    </a>
+    <div class="cms-sidebar-label">مدیریت اصلی</div>
+    <nav class="cms-nav">
+      <a href="{% url 'dashboard:index' %}" class="cms-nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}"><i class="bi bi-grid-1x2"></i><span>داشبورد</span></a>
+      <a href="{% url 'dashboard:products' %}" class="cms-nav-link {% if request.resolver_match.url_name == 'products' or 'product_' in request.resolver_match.url_name %}active{% endif %}"><i class="bi bi-box-seam"></i><span>محصولات</span></a>
+      <a href="{% url 'dashboard:categories' %}" class="cms-nav-link {% if 'categor' in request.resolver_match.url_name and 'blog_' not in request.resolver_match.url_name %}active{% endif %}"><i class="bi bi-tags"></i><span>دسته‌بندی محصولات</span></a>
+      <a href="{% url 'dashboard:orders' %}" class="cms-nav-link {% if 'order' in request.resolver_match.url_name %}active{% endif %}"><i class="bi bi-receipt"></i><span>سفارش‌ها</span></a>
+      <a href="{% url 'dashboard:users' %}" class="cms-nav-link {% if request.resolver_match.url_name == 'users' %}active{% endif %}"><i class="bi bi-people"></i><span>کاربران</span></a>
+    </nav>
+    <div class="cms-sidebar-label mt-4">مدیریت محتوا</div>
+    <nav class="cms-nav">
+      <a href="{% url 'dashboard:posts' %}" class="cms-nav-link {% if 'post' in request.resolver_match.url_name %}active{% endif %}"><i class="bi bi-journal-richtext"></i><span>مقالات بلاگ</span></a>
+      <a href="{% url 'dashboard:blog_categories' %}" class="cms-nav-link {% if 'blog_category' in request.resolver_match.url_name %}active{% endif %}"><i class="bi bi-folder2-open"></i><span>دسته‌بندی بلاگ</span></a>
+      <a href="{% url 'dashboard:tags' %}" class="cms-nav-link {% if 'tag_' in request.resolver_match.url_name or request.resolver_match.url_name == 'tags' %}active{% endif %}"><i class="bi bi-hash"></i><span>برچسب‌ها</span></a>
+      <a href="{% url 'dashboard:comments' %}" class="cms-nav-link {% if 'comment' in request.resolver_match.url_name %}active{% endif %}"><i class="bi bi-chat-square-text"></i><span>دیدگاه‌ها</span>{% if pending_comments_count %}<b class="cms-nav-count">{{ pending_comments_count }}</b>{% endif %}</a>
+    </nav>
+    <div class="cms-sidebar-bottom">
+      <a href="{% url 'core:home' %}" class="cms-nav-link"><i class="bi bi-box-arrow-up-left"></i><span>مشاهده فروشگاه</span></a>
+      <form method="post" action="{% url 'dashboard:logout' %}">{% csrf_token %}<button class="cms-nav-link cms-logout" type="submit"><i class="bi bi-box-arrow-right"></i><span>خروج از پنل</span></button></form>
+    </div>
+  </aside>
+
+  <div class="cms-main-wrap">
+    <header class="cms-topbar">
+      <div class="d-flex align-items-center gap-3">
+        <button class="cms-icon-button cms-menu-toggle" id="cmsMenuToggle" type="button" aria-label="باز کردن منو"><i class="bi bi-list"></i></button>
+        <div><div class="cms-topbar-title">{% block page_heading %}پنل مدیریت{% endblock %}</div><div class="cms-breadcrumb">آینده‌شاپ <span>/</span> {% block breadcrumb %}داشبورد{% endblock %}</div></div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="cms-icon-button" id="cmsThemeToggle" type="button" aria-label="تغییر پوسته" title="تغییر پوسته"><i class="bi bi-moon-stars"></i></button>
+        <a href="{% url 'core:home' %}" target="_blank" class="cms-store-link"><i class="bi bi-box-arrow-up-left"></i><span>نمایش فروشگاه</span></a>
+        <div class="cms-user-chip"><span class="cms-avatar">{{ request.user.username|slice:':1'|upper }}</span><span class="cms-user-name">{{ request.user.get_full_name|default:request.user.username }}</span></div>
+      </div>
+    </header>
+
+    <main class="cms-content">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show cms-alert" role="alert">
+            {{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="بستن"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="cms-footer"><span>آینده‌شاپ · سیستم مدیریت محتوا</span><span>نسخه اولیه CMS اختصاصی</span></footer>
+  </div>
+</div>
+<div class="cms-sidebar-backdrop" id="cmsSidebarBackdrop"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'dashboard/js/dashboard.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

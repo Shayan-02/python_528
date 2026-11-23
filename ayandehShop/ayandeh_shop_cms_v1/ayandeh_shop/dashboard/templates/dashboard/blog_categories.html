@@ -1,0 +1,9 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block title %}دسته‌بندی بلاگ | آینده‌شاپ{% endblock %}
+{% block page_heading %}دسته‌بندی بلاگ{% endblock %}
+{% block breadcrumb %}بلاگ / دسته‌بندی‌ها{% endblock %}
+{% block content %}
+<div class="cms-page-titlebar"><div><h1>دسته‌بندی‌های بلاگ</h1><p>مدیریت دسته‌بندی مقالات؛ غیرفعال‌کردن دسته باعث پنهان‌شدن آرشیو آن می‌شود.</p></div><a class="btn btn-primary" href="{% url 'dashboard:blog_category_create' %}"><i class="bi bi-plus-lg"></i> دسته‌بندی جدید</a></div>
+<section class="cms-panel"><form method="get" class="cms-filterbar"><div class="cms-search"><i class="bi bi-search"></i><input name="q" value="{{ query }}" placeholder="جستجوی دسته‌بندی"></div><button class="btn btn-outline-primary">جستجو</button></form><div class="table-responsive"><table class="table cms-table align-middle"><thead><tr><th>دسته‌بندی</th><th>نامک</th><th>تعداد مقاله</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>{% for item in page_obj %}<tr><td><b>{{ item.name }}</b></td><td><code>{{ item.slug }}</code></td><td>{{ item.post_count|intcomma }}</td><td>{% if item.is_active %}<span class="cms-status status-delivered">فعال</span>{% else %}<span class="cms-status status-cancelled">غیرفعال</span>{% endif %}</td><td><div class="cms-actions"><a href="{% url 'dashboard:blog_category_update' item.pk %}" class="cms-row-action"><i class="bi bi-pencil-square"></i></a><form method="post" action="{% url 'dashboard:blog_category_toggle' item.pk %}">{% csrf_token %}<button class="cms-row-action warning"><i class="bi bi-power"></i></button></form><a href="{% url 'dashboard:blog_category_delete' item.pk %}" class="cms-row-action danger"><i class="bi bi-trash3"></i></a></div></td></tr>{% empty %}<tr><td colspan="5"><div class="cms-empty">دسته‌بندی بلاگی وجود ندارد.</div></td></tr>{% endfor %}</tbody></table></div>{% include 'dashboard/partials/pagination.html' %}</section>
+{% endblock %}

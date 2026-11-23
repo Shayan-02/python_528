@@ -1,0 +1,25 @@
+{% extends "base.html" %} {% block title %}ورود | آینده شاپ{% endblock %} {%
+block content %}
+<div class="auth-card">
+    <h1 class="h4 mb-4">ورود به حساب کاربری</h1>
+    <form method="post">
+        {% csrf_token %} {% for field in form %}
+        <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label
+            ><input
+                class="form-control"
+                type="{{ field.field.widget.input_type }}"
+                name="{{ field.html_name }}"
+                required
+            />
+        </div>
+        {% endfor %} {% if form.errors %}
+        <div class="alert alert-danger">نام کاربری یا رمز عبور صحیح نیست.</div>
+        {% endif %}
+        <button class="btn btn-primary w-100">ورود</button>
+    </form>
+    <p class="mt-3 mb-0 text-center">
+        حساب ندارید؟ <a href="{% url 'accounts:signup' %}">ثبت‌نام کنید</a>
+    </p>
+</div>
+{% endblock %}

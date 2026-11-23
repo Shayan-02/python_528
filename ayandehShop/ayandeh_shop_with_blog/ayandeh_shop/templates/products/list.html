@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}محصولات | آینده شاپ{% endblock %}
+{% block content %}
+<div class="section-heading products-heading">
+  <div>
+    <h1>{% if active_category %}{{ active_category.name }}{% else %}همه محصولات{% endif %}</h1>
+    <p class="text-secondary mb-0">{{ page_obj.paginator.count }} محصول</p>
+  </div>
+
+  <form method="get" class="sort-toolbar">
+    {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+    {% if min_price %}<input type="hidden" name="min_price" value="{{ min_price }}">{% endif %}
+    {% if max_price %}<input type="hidden" name="max_price" value="{{ max_price }}">{% endif %}
+    {% if discounted_only %}<input type="hidden" name="discounted" value="1">{% endif %}
+    {% if in_stock_only %}<input type="hidden" name="in_stock" value="1">{% endif %}
+    <label for="product-sort" class="form-label mb-0">مرتب‌سازی:</label>
+    <select id="product-sort" name="sort" class="form-select form-select-sm">
+      <option value="" {% if not sort %}selected{% endif %}>پیش‌فرض</option>
+      <option value="newest" {% if sort == 'newest' %}selected{% endif %}>جدیدترین</option>
+      <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>ارزان‌ترین</option>
+      <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>گران‌ترین</option>
+    </select>
+    <button class="btn btn-primary btn-sm" type="submit">اعمال</button>
+  </form>
+</div>
+
+<div class="row g-4">
+  <aside class="col-lg-3">
+    <div class="filter-box">
+      <h5>دسته‌بندی‌ها</h5>
+      <a class="filter-link" href="{% url 'products:list' %}">همه محصولات</a>
+      {% for category in categories %}
+        <a class="filter-link{% if active_category.pk == category.pk %} active{% endif %}" href="{% url 'products:category' category.slug %}">{{ category.name }}</a>
+      {% endfor %}
+
+      <hr>
+      <form method="get" class="product-filters">
+        {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+        {% if sort %}<input type="hidden" name="sort" value="{{ sort }}">{% endif %}
+        <h6 class="filter-title">فیلتر محصولات</h6>
+
+        <div class="mb-3">
+          <label class="form-label" for="min-price">حداقل قیمت (تومان)</label>
+          <input id="min-price" class="form-control form-control-sm" type="number" name="min_price" min="0" step="1" inputmode="numeric" value="{{ min_price }}" placeholder="مثلاً 1000000">
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="max-price">حداکثر قیمت (تومان)</label>
+          <input id="max-price" class="form-control form-control-sm" type="number" name="max_price" min="0" step="1" inputmode="numeric" value="{{ max_price }}" placeholder="مثلاً 5000000">
+        </div>
+
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" value="1" id="discounted-only" name="discounted" {% if discounted_only %}checked{% endif %}>
+          <label class="form-check-label" for="discounted-only">فقط محصولات تخفیف‌دار</label>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" value="1" id="in-stock-only" name="in_stock" {% if in_stock_only %}checked{% endif %}>
+          <label class="form-check-label" for="in-stock-only">فقط کالاهای موجود</label>
+        </div>
+        <button class="btn btn-primary w-100" type="submit">اعمال فیلترها</button>
+        <a class="filter-reset" href="{% if active_category %}{% url 'products:category' active_category.slug %}{% else %}{% url 'products:list' %}{% endif %}">پاک کردن فیلترها</a>
+      </form>
+    </div>
+  </aside>
+
+  <div class="col-lg-9">
+    {% if query %}<p>نتایج جستجو برای «{{ query }}»</p>{% endif %}
+    <div class="row g-3 product-grid">
+      {% for product in page_obj %}{% include "products/_card.html" with product=product %}{% empty %}
+        <div class="col-12"><div class="empty-state">محصولی برای نمایش پیدا نشد.</div></div>
+      {% endfor %}
+    </div>
+    {% if page_obj.paginator.num_pages > 1 %}
+      <nav class="mt-4" aria-label="صفحه‌بندی محصولات"><ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if pagination_query %}&amp;{{ pagination_query }}{% endif %}">قبلی</a></li>{% endif %}
+        <li class="page-item disabled"><span class="page-link">{{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if pagination_query %}&amp;{{ pagination_query }}{% endif %}">بعدی</a></li>{% endif %}
+      </ul></nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

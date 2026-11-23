@@ -1,0 +1,20 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}{{ page_title }} | آینده‌شاپ{% endblock %}
+{% block page_heading %}{{ page_title }}{% endblock %}
+{% block breadcrumb %}فرم اطلاعات{% endblock %}
+{% block content %}
+<div class="cms-page-titlebar"><div><h1>{{ page_title }}</h1><p>اطلاعات را با دقت تکمیل کنید و سپس ذخیره را بزنید.</p></div></div>
+<section class="cms-panel cms-form-panel"><form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+  {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+  <div class="row g-3">
+    {% for field in form %}
+      <div class="{% if field.name == 'description' or field.name == 'content' or field.name == 'seo_description' or field.name == 'related_products' or field.name == 'tags' %}col-12{% elif field.field.widget.input_type == 'checkbox' %}col-md-6{% else %}col-md-6{% endif %}">
+        {% if field.field.widget.input_type == 'checkbox' %}<div class="cms-check-field"><label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}</div>
+        {% else %}<label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="text-danger"> *</span>{% endif %}</label>{{ field }}{% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}{% endif %}
+        {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="cms-form-actions"><button class="btn btn-primary" type="submit"><i class="bi bi-check2"></i> {{ submit_label|default:'ذخیره' }}</button><a class="btn btn-light" href="{{ cancel_url }}">انصراف</a></div>
+</form></section>
+{% endblock %}

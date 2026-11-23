@@ -1,0 +1,13 @@
+{% extends 'dashboard/base.html' %}
+{% load humanize %}
+{% block title %}مدیریت سفارش‌ها | آینده‌شاپ{% endblock %}
+{% block page_heading %}مدیریت سفارش‌ها{% endblock %}
+{% block breadcrumb %}سفارش‌ها{% endblock %}
+{% block content %}
+<div class="cms-page-titlebar"><div><h1>سفارش‌ها</h1><p>مشاهده سفارش‌های مشتریان و پیگیری وضعیت ارسال.</p></div></div>
+<section class="cms-panel"><form method="get" class="cms-filterbar"><div class="cms-search"><i class="bi bi-search"></i><input name="q" value="{{ query }}" placeholder="نام مشتری، تلفن یا شماره سفارش"></div><select class="form-select" name="status"><option value="">همه وضعیت‌ها</option>{% for value,label in status_choices %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select><button class="btn btn-outline-primary">اعمال فیلتر</button><a class="btn btn-light" href="{% url 'dashboard:orders' %}">پاک کردن</a></form>
+<div class="table-responsive"><table class="table cms-table align-middle"><thead><tr><th>شماره سفارش</th><th>مشتری</th><th>شماره تماس</th><th>تاریخ ثبت</th><th>مبلغ کل</th><th>وضعیت</th><th></th></tr></thead><tbody>
+{% for order in page_obj %}<tr><td><b>#{{ order.pk }}</b></td><td>{{ order.full_name }}</td><td dir="ltr" class="text-end">{{ order.phone }}</td><td>{{ order.created_at|date:'Y/m/d H:i' }}</td><td>{{ order.total_price|intcomma }} تومان</td><td><span class="cms-status status-{{ order.status }}">{{ order.get_status_display }}</span></td><td><a href="{% url 'dashboard:order_detail' order.pk %}" class="cms-row-action" title="جزئیات"><i class="bi bi-chevron-left"></i></a></td></tr>
+{% empty %}<tr><td colspan="7"><div class="cms-empty">سفارشی با این شرایط پیدا نشد.</div></td></tr>{% endfor %}
+</tbody></table></div>{% include 'dashboard/partials/pagination.html' %}</section>
+{% endblock %}
