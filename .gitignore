@@ -1,103 +1,138 @@
-# ==============================
-# Python
-# ==============================
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
+# ==================================================
+# PYTHON
+# ==================================================
 
-# ==============================
-# Django
-# ==============================
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-media/
-staticfiles/
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/*.so
+**/.Python
 
-# ==============================
-# Environment Variables
-# ==============================
-.env
-.env.*
+**/*.egg
+**/*.egg-info/
+**/installed.cfg
+**/*.egg-info
+
+**/build/
+**/develop-eggs/
+**/dist/
+**/downloads/
+**/eggs/
+**/.eggs/
+**/parts/
+**/sdist/
+**/wheels/
+
+# ==================================================
+# DJANGO
+# ==================================================
+
+**/*.log
+**/local_settings.py
+
+**/db.sqlite3
+**/db.sqlite3-journal
+**/*.sqlite3
+**/*.sqlite3-journal
+
+**/staticfiles/
+**/media/
+
+# ==================================================
+# ENVIRONMENT VARIABLES
+# ==================================================
+
+**/.env
+**/.env.*
+
+# Keep example environment files
 !.env.example
+!**/.env.example
 
-# ==============================
-# Virtual Environments
-# ==============================
-venv/
-.venv/
-env/
-ENV/
-virtualenv/
-.python-version
+# ==================================================
+# VIRTUAL ENVIRONMENTS
+# ==================================================
 
-# ==============================
-# Django Migrations
-# ==============================
-# Migration files are intentionally NOT ignored.
-# Keep migrations in Git.
+**/venv/
+**/.venv/
+**/env/
+**/ENV/
+**/virtualenv/
 
-# ==============================
-# IDEs & Editors
-# ==============================
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
+**/.python-version
 
-# ==============================
-# Jupyter Notebook
-# ==============================
-.ipynb_checkpoints/
+# ==================================================
+# IDEs & EDITORS
+# ==================================================
 
-# ==============================
-# Testing & Coverage
-# ==============================
-.coverage
-.coverage.*
-htmlcov/
-.tox/
-.nox/
-.pytest_cache/
-.cache/
-nosetests.xml
-coverage.xml
+**/.idea/
+**/.vscode/
+**/*.swp
+**/*.swo
+**/*~
 
-# ==============================
-# Type Checking
-# ==============================
-.mypy_cache/
-.dmypy.json
-.pyre/
-.ruff_cache/
+# ==================================================
+# JUPYTER NOTEBOOK
+# ==================================================
 
-# ==============================
-# OS Generated Files
-# ==============================
-.DS_Store
-Thumbs.db
-Desktop.ini
+**/.ipynb_checkpoints/
 
-# ==============================
-# Logs
-# ==============================
-logs/
-*.log
+# ==================================================
+# TESTING & COVERAGE
+# ==================================================
+
+**/.coverage
+**/.coverage.*
+**/htmlcov/
+**/.tox/
+**/.nox/
+**/.pytest_cache/
+**/.cache/
+
+**/nosetests.xml
+**/coverage.xml
+
+# ==================================================
+# TYPE CHECKING & LINTING
+# ==================================================
+
+**/.mypy_cache/
+**/.dmypy.json
+**/.pyre/
+**/.ruff_cache/
+
+# ==================================================
+# OPERATING SYSTEM FILES
+# ==================================================
+
+**/.DS_Store
+**/Thumbs.db
+**/Desktop.ini
+
+# ==================================================
+# LOGS
+# ==================================================
+
+**/logs/
+**/*.log
+
+# ==================================================
+# NODE.JS (Optional Frontend)
+# ==================================================
+
+**/node_modules/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/.npm/
+**/.yarn/
+
+# ==================================================
+# TEMPORARY FILES
+# ==================================================
+
+**/*.tmp
+**/*.bak
+**/*.old
+**/*.orig
+**/*.temp
